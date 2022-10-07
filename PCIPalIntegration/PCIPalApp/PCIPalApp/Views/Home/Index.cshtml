@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "PCI PAL";
+}
+
+<body>
+    <div>
+        @*<iframe src="" width="900" height="600" id="myIframe">
+            </iframe>*@
+
+
+    </div>
+</body>
+
+<script src="~/Content/Scripts/jquery.min.js"></script>
+<script src="~/Content/Scripts/moment-with-locales.min.js"></script>
+<script src="~/Content/Scripts/moment-timezone-with-data.min.js"></script>
+
+<script src="~/Content/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Content/Scripts/knockout-min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        GetpPCIPalSession();
+
+    });
+    function GetpPCIPalSession() {
+
+        $.ajax({
+
+            type: "GET",
+            url: "/Home/GetPCIPalSession",
+            headers: "Access-Control-Allow-Origin",
+            accepts: "application/json",
+            contentType: "application/json",
+            success: function (data) {
+
+                var iframeurl = "https://euwest1.pcipalstaging.cloud/session/617/view/" + data.Id + "/framed";
+                // var iframeurl = "https://euwest1.pcipalstaging.cloud/session/617/view/" + data.Id;
+                //var url = "https://euwest1.pcipalstaging.cloud/api/v1/617/launch/";
+                //populateIframe(iframeurl, 'Bearer ' + data.access_token, data.refresh_token);
+                //populateIframe(iframeurl, data.access_token, data.refresh_token);
+                displaySession(iframeurl,data.access_token,data.refresh_token);
+               
+            },
+            error: function (err) {
+                console.log(err);
+
+            }
+        });
+
+    }
+
+   
+
+    function displaySession(iframeurl, access_token, refresh_token) {
+
+        $.ajax({
+
+            type: "GET",
+            url: "/Home/GetPCIPalDisplaySession",
+            headers: "Access-Control-Allow-Origin",
+            data: { iframeUrl: iframeurl, access_token: access_token, refresh_token: refresh_token },
+            accepts: "application/json",
+            contentType: "application/json",
+            dataType:"json",
+            success: function (data) {
+
+                //var iframeurl = "https://euwest1.pcipalstaging.cloud/session/617/view/" + data.Id + "/framed";
+                // var iframeurl = "https://euwest1.pcipalstaging.cloud/session/617/view/" + data.Id;
+                //var url = "https://euwest1.pcipalstaging.cloud/api/v1/617/launch/";
+                //populateIframe(iframeurl, 'Bearer ' + data.access_token, data.refresh_token);
+               // populateIframe(iframeurl, data.access_token, data.refresh_token);
+                document.getElementById("ele").innerHTML = data;
+               
+
+            },
+            error: function (err) {
+                console.log(err);
+
+            }
+        });
+    }
+    //function populateIframe(url, access_token, refresh_token) {
+       
+    //    var xhr = new XMLHttpRequest();
+    //    var data = "x-bearer-token=" + access_token + "&x-refresh-token=" + refresh_token + "";
+    //    xhr.open("GET", url);
+    //    //$("#ele").load(url, data);
+
+    //    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    //    xhr.setRequestHeader("CrossDomain", true);
+    //    //xhr.setRequestHeader("Authorization", "Negotiate");
+    //    xhr.setRequestHeader("Access-Control-Allow-Credentials","true");
+    //    xhr.setRequestHeader("Access-Control-Allow-Headers", "true");
+    //    //xhr.setRequestHeader('Access-Control-Allow-Methods', 'Content-Type', 'Authorization');
+    //    xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+    //    xhr.onreadystatechange = function () {
+    //        if (xhr.readyState === 4) {
+    //            console.log(xhr.responseText);
+    //            document.getElementById("ele").innerHTML = this.response;
+    //            var iframe = document.getElementById("iframePciPal");
+    //            //iframe.srcdoc = this.response;
+    //            // $('#iframePciPal').contents().find('html').html(this.response);
+    //        }
+    //    };
+
+    //    xhr.send(data);
+
+    //}
+</script>
